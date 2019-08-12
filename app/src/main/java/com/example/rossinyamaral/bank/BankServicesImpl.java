@@ -28,9 +28,9 @@ import java.util.Map;
  * Created by rossinyamaral on 08/12/18.
  */
 
-public class BankApi {
+public class BankServicesImpl implements BankServices {
 
-    private static final String LOGTAG = BankApi.class.getSimpleName();
+    private static final String LOGTAG = BankServicesImpl.class.getSimpleName();
     private static final int MY_SOCKET_TIMEOUT_MS = 10000;
     private static final String USER_PARAM = "user";
     private static final String PASSWORD_PARAM = "password";
@@ -39,7 +39,7 @@ public class BankApi {
 
     private Uri uri = Uri.parse(BuildConfig.SERVICE_BASE_URL);
 
-    public BankApi() {
+    BankServicesImpl() {
         //this.context = context;
         gson = new Gson();
     }
@@ -96,6 +96,7 @@ public class BankApi {
     }
 
 
+    @Override
     public void login(final String user, final String password, final ApiCallback<UserAccountModel> callback) {
 
         try {
@@ -147,6 +148,7 @@ public class BankApi {
     }
 
 
+    @Override
     public void getStatements(int userId, final ApiCallback<List<StatementModel>> callback) {
 
         try {
@@ -195,17 +197,6 @@ public class BankApi {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public interface ApiCallback<T> {
-        void onSuccess(T object);
-
-        void onError(ErrorResponse message);
-    }
-
-    public class ErrorResponse {
-        public int code;
-        public String message;
     }
 
 }

@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,14 +20,14 @@ import com.example.rossinyamaral.bank.model.UserAccountModel;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 
 interface StatementsActivityInput {
-    public void displayStatementsData(StatementsViewModel viewModel);
+    void displayStatementsData(StatementsViewModel viewModel);
+    void displayError(String error);
 }
 
 
@@ -48,7 +47,6 @@ public class StatementsActivity extends AppCompatActivity
     ImageView logoutImageView;
 
     RecyclerView recyclerView;
-    private Locale LOCALE = new Locale("PT", "br");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,9 +75,9 @@ public class StatementsActivity extends AppCompatActivity
         recyclerView = findViewById(R.id.recyclerView);
 
         nameTextView.setText(userAccountModel.getName());
-        accountTextView.setText(String.format("%s / %s", userAccountModel.getBankAccount(),
-                getFormattedAgency(userAccountModel.getAgency())));
-        balanceTextView.setText(getFormattedMoney(userAccountModel.getBalance()));
+        accountTextView.setText(output.getFormattedAccount(userAccountModel.getBankAccount(),
+                userAccountModel.getAgency()));
+        balanceTextView.setText(output.getFormattedMoney(userAccountModel.getBalance()));
 
         logoutImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,37 +102,19 @@ public class StatementsActivity extends AppCompatActivity
         setStatementsLisView(viewModel.statements);
     }
 
+    @Override
+    public void displayError(String error) {
+        BankApplication.getInstance().dismissLoading();
+        BankApplication.getInstance().alert(this, error, null);
+    }
+
     private void setStatementsLisView(List<StatementModel> statements) {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new StatementListAdapter(statements));
         Log.d(TAG, "Configured RecyclerView");
     }
 
-    public String getFormattedAgency(String agency) {
-        if (agency != null && agency.length() == 9) {
-            StringBuilder builder = new StringBuilder(agency);
-            builder.insert(8, "-");
-            builder.insert(2, ".");
-            agency = builder.toString();
-        }
-        return agency;
-    }
 
-    public String getFormattedMoney(double value) {
-        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(LOCALE);
-        return numberFormat.format(value);
-    }
-
-    public String getFormatedDate(String dateString) {
-        try {
-            SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd", LOCALE);
-            SimpleDateFormat format2 = new SimpleDateFormat("dd/MM/yyyy", LOCALE);
-            Date date = format1.parse(dateString);
-            return format2.format(date);
-        } catch (Exception e) {
-            return "";
-        }
-    }
 
     private class StatementListAdapter extends RecyclerView.Adapter<StatementListAdapter.ViewHolder> {
 
@@ -152,8 +132,7 @@ public class StatementsActivity extends AppCompatActivity
 
             int resource = viewType == 0 ? R.layout.item_recents : R.layout.item_statement;
             View layoutView = layoutInflater.inflate(resource, parent, false);
-            ViewHolder viewHolder = new ViewHolder(layoutView);
-            return viewHolder;
+            return new ViewHolder(layoutView);
         }
 
         @Override
@@ -162,8 +141,8 @@ public class StatementsActivity extends AppCompatActivity
             if (position > 0) {
                 viewHolder.titleTextView.setText(statements.get(pos).title);
                 viewHolder.descTextView.setText(statements.get(pos).desc);
-                viewHolder.dateTextView.setText(getFormatedDate(statements.get(pos).date));
-                viewHolder.valueTextView.setText(getFormattedMoney(statements.get(pos).value));
+                viewHolder.dateTextView.setText(output.getFormattedDate(statements.get(pos).date));
+                viewHolder.valueTextView.setText(output.getFormattedMoney(statements.get(pos).value));
             }
         }
 
@@ -182,18 +161,18 @@ public class StatementsActivity extends AppCompatActivity
             return position == 0 ? 0 : 1;
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder {
+        class ViewHolder extends RecyclerView.ViewHolder {
             TextView titleTextView;
             TextView descTextView;
             TextView dateTextView;
             TextView valueTextView;
 
-            public ViewHolder(View itemView) {
+            ViewHolder(View itemView) {
                 super(itemView);
-                titleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
-                descTextView = (TextView) itemView.findViewById(R.id.descTextView);
-                dateTextView = (TextView) itemView.findViewById(R.id.dateTextView);
-                valueTextView = (TextView) itemView.findViewById(R.id.valueTextView);
+                titleTextView = itemView.findViewById(R.id.titleTextView);
+                descTextView = itemView.findViewById(R.id.descTextView);
+                dateTextView = itemView.findViewById(R.id.dateTextView);
+                valueTextView = itemView.findViewById(R.id.valueTextView);
             }
         }
     }

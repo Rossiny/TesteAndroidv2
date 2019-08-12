@@ -1,15 +1,11 @@
 package com.example.rossinyamaral.bank.statementsScreen;
 
-import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.concurrent.TimeUnit;
 
 interface StatementsPresenterInput {
-    public void presentStatementsData(StatementsResponse response);
+    void presentStatementsData(StatementsResponse response);
+    void presentError(String error);
 }
 
 
@@ -17,7 +13,6 @@ public class StatementsPresenter implements StatementsPresenterInput {
 
     public static String TAG = StatementsPresenter.class.getSimpleName();
 
-    //weak var output: HomePresenterOutput!
     public WeakReference<StatementsActivityInput> output;
 
 
@@ -30,5 +25,10 @@ public class StatementsPresenter implements StatementsPresenterInput {
             viewModel.statements = response.statements;
             output.get().displayStatementsData(viewModel);
         }
+    }
+
+    @Override
+    public void presentError(String error) {
+        output.get().displayError(error);
     }
 }

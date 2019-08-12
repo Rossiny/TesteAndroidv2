@@ -16,14 +16,15 @@ import java.util.regex.Pattern;
 
 
 interface LoginActivityInput {
-    public void displayLoginData(UserAccountModel viewModel);
+    void displayLoginData(UserAccountModel viewModel);
 
-    public void displayLoginError(String message);
+    void displayLoginError(String message);
+
+    void displayPasswordError();
 }
 
 
-public class LoginActivity extends AppCompatActivity
-        implements LoginActivityInput {
+public class LoginActivity extends AppCompatActivity implements LoginActivityInput {
 
     public static String TAG = LoginActivity.class.getSimpleName();
     LoginInteractorInput output;
@@ -32,8 +33,6 @@ public class LoginActivity extends AppCompatActivity
     EditText userEditText;
     EditText passwordEditText;
     Button loginButton;
-
-    public UserAccountModel userAccountModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,17 +51,12 @@ public class LoginActivity extends AppCompatActivity
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String password = passwordEditText.getText().toString();
-                if (checkPassword(password)) {
-                    BankApplication.getInstance().loading(LoginActivity.this);
-                    LoginRequest aLoginRequest = new LoginRequest();
-                    //populate the request
-                    aLoginRequest.user = userEditText.getText().toString();
-                    aLoginRequest.password = password;
-                    output.fetchLoginData(aLoginRequest);
-                } else {
-                    displayLoginError(getString(R.string.password_error_message));
-                }
+                BankApplication.getInstance().loading(LoginActivity.this);
+                LoginRequest aLoginRequest = new LoginRequest();
+                //populate the request
+                aLoginRequest.user = userEditText.getText().toString();
+                aLoginRequest.password = passwordEditText.getText().toString();
+                output.fetchLoginData(aLoginRequest);
             }
         });
         String lastLogin = BankApplication.getInstance().getLastLogin();
@@ -74,24 +68,6 @@ public class LoginActivity extends AppCompatActivity
             }
         }
         // Do other work
-    }
-
-    public boolean checkPassword(String password) {
-        return hasUppercaseLetter(password) &&
-                hasAlphanumericCharacter(password) &&
-                hasSpecialCharacter(password);
-    }
-
-    public boolean hasUppercaseLetter(String password) {
-        return Pattern.compile("[A-Z]").matcher(password).find();
-    }
-
-    public boolean hasSpecialCharacter(String password) {
-        return Pattern.compile("[^a-zA-Z0-9]").matcher(password).find();
-    }
-
-    public boolean hasAlphanumericCharacter(String password) {
-        return Pattern.compile("[a-z0-9]").matcher(password).find();
     }
 
 
@@ -107,5 +83,10 @@ public class LoginActivity extends AppCompatActivity
     public void displayLoginError(String message) {
         BankApplication.getInstance().dismissLoading();
         BankApplication.getInstance().alert(this, message, null);
+    }
+
+    @Override
+    public void displayPasswordError() {
+        displayLoginError(getString(R.string.password_error_message));
     }
 }

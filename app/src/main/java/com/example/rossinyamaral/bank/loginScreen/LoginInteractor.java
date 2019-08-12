@@ -1,23 +1,23 @@
 package com.example.rossinyamaral.bank.loginScreen;
 
-import android.util.Log;
-
-import com.example.rossinyamaral.bank.BankApi;
-import com.example.rossinyamaral.bank.BankApplication;
+import com.example.rossinyamaral.bank.ApiCallback;
+import com.example.rossinyamaral.bank.ErrorResponse;
 import com.example.rossinyamaral.bank.model.UserAccountModel;
 
-interface LoginInteractorInput {
-    public void fetchLoginData(LoginRequest request);
-}
+import java.util.regex.Pattern;
 
+interface LoginInteractorInput {
+
+    void fetchLoginData(LoginRequest request);
+}
 
 public class LoginInteractor implements LoginInteractorInput {
 
     public static String TAG = LoginInteractor.class.getSimpleName();
     public LoginPresenterInput output;
-    public LoginWorkerInput aLoginWorkerInput;
+    private LoginWorkerInput aLoginWorkerInput;
 
-    public LoginWorkerInput getLoginWorkerInput() {
+    private LoginWorkerInput getLoginWorkerInput() {
         if (aLoginWorkerInput == null) return new LoginWorker();
         return aLoginWorkerInput;
     }
@@ -26,24 +26,46 @@ public class LoginInteractor implements LoginInteractorInput {
         this.aLoginWorkerInput = aLoginWorkerInput;
     }
 
-    @Override
     public void fetchLoginData(LoginRequest request) {
+        if (!isLoginPasswordValid(request.password)) {
+            output.presentPasswordError();
+            return;
+        }
+
         aLoginWorkerInput = getLoginWorkerInput();
-        final LoginResponse LoginResponse = new LoginResponse();
+        final LoginResponse loginResponse = new LoginResponse();
         // Call the workers
-        BankApplication.getInstance().bankApi.login(request.user, request.password,
-                new BankApi.ApiCallback<UserAccountModel>() {
+        aLoginWorkerInput.getUserAccount(request.user, request.password,
+                new ApiCallback<UserAccountModel>() {
                     @Override
-                    public void onSuccess(UserAccountModel object) {
-                        LoginResponse.userAccountModel = object;
-                        output.presentLoginData(LoginResponse);
+                    public void onSuccess(UserAccountModel model) {
+                        loginResponse.userAccountModel = model;
+                        output.presentLoginData(loginResponse);
                     }
 
                     @Override
-                    public void onError(BankApi.ErrorResponse error) {
+                    public void onError(ErrorResponse error) {
                         output.presentLoginError(error.message);
                     }
                 });
 
+    }
+
+    private boolean isLoginPasswordValid(String password) {
+        return hasUppercaseLetter(password) &&
+                hasAlphanumericCharacter(password) &&
+                hasSpecialCharacter(password);
+    }
+
+    private boolean hasUppercaseLetter(String password) {
+        return Pattern.compile("[A-Z]").matcher(password).find();
+    }
+
+    private boolean hasSpecialCharacter(String password) {
+        return Pattern.compile("[^a-zA-Z0-9]").matcher(password).find();
+    }
+
+    private boolean hasAlphanumericCharacter(String password) {
+        return Pattern.compile("[a-z0-9]").matcher(password).find();
     }
 }

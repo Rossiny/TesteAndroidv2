@@ -67,5 +67,10 @@ public class LoginPresenterUnitTest {
         public void displayLoginError(String message) {
             //TODO
         }
+
+        @Override
+        public void displayPasswordError() {
+            //TODO
+        }
     }
 }

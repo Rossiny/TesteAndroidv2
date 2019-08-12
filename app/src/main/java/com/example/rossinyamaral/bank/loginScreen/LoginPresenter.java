@@ -9,8 +9,9 @@ import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 interface LoginPresenterInput {
-    public void presentLoginData(LoginResponse response);
-    public void presentLoginError(String message);
+    void presentLoginData(LoginResponse response);
+    void presentLoginError(String message);
+    void presentPasswordError();
 }
 
 
@@ -39,5 +40,10 @@ public class LoginPresenter implements LoginPresenterInput {
     @Override
     public void presentLoginError(String message) {
         output.get().displayLoginError(message);
+    }
+
+    @Override
+    public void presentPasswordError() {
+        output.get().displayPasswordError();
     }
 }

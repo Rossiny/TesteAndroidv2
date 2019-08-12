@@ -1,12 +1,12 @@
 package com.example.rossinyamaral.bank;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -20,7 +20,6 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
-import com.example.rossinyamaral.bank.model.UserAccountModel;
 
 /**
  * Created by rossinyamaral on 08/12/18.
@@ -31,14 +30,14 @@ public class BankApplication extends Application {
     private static BankApplication mInstance;
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
-    public BankApi bankApi;
+    public BankServices bankServices;
 
     private ProgressDialog progress;
 
     public BankApplication() {
         super();
         mInstance = this;
-        bankApi = new BankApi();
+        bankServices = new BankServicesImpl();
     }
 
     public static BankApplication getInstance() {
@@ -85,6 +84,7 @@ public class BankApplication extends Application {
         return sharedPref.getString(key, defaultValue);
     }
 
+    @SuppressLint("ApplySharedPref")
     public void setParam(String key, String value) {
         SharedPreferences sharedPref = getSharedPreferences("sharedParam", Context.MODE_PRIVATE);
         sharedPref.edit().putString(key, value).commit();
