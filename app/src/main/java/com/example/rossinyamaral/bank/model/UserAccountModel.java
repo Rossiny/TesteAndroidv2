@@ -9,11 +9,11 @@ import android.os.Parcelable;
 
 public class UserAccountModel implements Parcelable {
 
-    int userId;
-    String name;
-    String bankAccount;
-    String agency;
-    double balance;
+    private int userId;
+    private String name;
+    private String bankAccount;
+    private String agency;
+    private double balance;
 
     public UserAccountModel() {}
 

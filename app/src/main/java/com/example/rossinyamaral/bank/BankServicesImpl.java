@@ -2,14 +2,18 @@ package com.example.rossinyamaral.bank;
 
 import android.content.Context;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.rossinyamaral.bank.model.StatementModel;
 import com.example.rossinyamaral.bank.model.UserAccountModel;
 import com.google.gson.Gson;
@@ -30,28 +34,31 @@ import java.util.Map;
 
 public class BankServicesImpl implements BankServices {
 
-    private static final String LOGTAG = BankServicesImpl.class.getSimpleName();
+    private static final String TAG = BankServicesImpl.class.getSimpleName();
     private static final int MY_SOCKET_TIMEOUT_MS = 10000;
     private static final String USER_PARAM = "user";
     private static final String PASSWORD_PARAM = "password";
     private Context context;
     private Gson gson;
 
+    private RequestQueue mRequestQueue;
+    private ImageLoader mImageLoader;
+
     private Uri uri = Uri.parse(BuildConfig.SERVICE_BASE_URL);
 
-    BankServicesImpl() {
-        //this.context = context;
+    BankServicesImpl(Context context) {
+        this.context = context;
         gson = new Gson();
     }
 
     private void doRequest(int requestMethod, String url, final Map<String, String> map, final Response.Listener<JSONObject> listener, final Response.ErrorListener errorListener) {
-        Log.d(LOGTAG, url + " " + (map != null ? map.toString() : ""));
+        Log.d(TAG, url + " " + (map != null ? map.toString() : ""));
         StringRequest request = new StringRequest(requestMethod, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try {
-                            Log.d(LOGTAG, response);
+                            Log.d(TAG, response);
                             JSONObject jsonObject = new JSONObject(response);
                             listener.onResponse(jsonObject);
                         } catch (JSONException e) {
@@ -62,7 +69,7 @@ public class BankServicesImpl implements BankServices {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e(LOGTAG, error.toString());
+                        Log.e(TAG, error.toString());
                         errorListener.onErrorResponse(error);
                     }
                 }) {
@@ -92,7 +99,7 @@ public class BankServicesImpl implements BankServices {
                 3,
                 0));
 
-        BankApplication.getInstance().addToRequestQueue(request);
+        addToRequestQueue(request);
     }
 
 
@@ -118,7 +125,8 @@ public class BankServicesImpl implements BankServices {
 
                             JSONObject jsonObject = response.getJSONObject("userAccount");
                             UserAccountModel userAccountModel = gson.fromJson(jsonObject.toString(), UserAccountModel.class);
-                            BankApplication.getInstance().setLastLogin(user, password);
+                            //TODO
+                            //BankApplication.getInstance().setLastLogin(user, password);
 
                             callback.onSuccess(userAccountModel);
                         }
@@ -196,6 +204,40 @@ public class BankServicesImpl implements BankServices {
             doRequest(Request.Method.GET, uri.toString(), null, okListener, errorListener);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private RequestQueue getRequestQueue() {
+        if (mRequestQueue == null) {
+            mRequestQueue = Volley.newRequestQueue(context);
+        }
+
+        return mRequestQueue;
+    }
+
+    private ImageLoader getImageLoader() {
+        getRequestQueue();
+        if (mImageLoader == null) {
+            mImageLoader = new ImageLoader(this.mRequestQueue, null
+                    //new LruBitmapCache()
+            );
+        }
+        return this.mImageLoader;
+    }
+
+    private <T> void addToRequestQueue(Request<T> req, String tag) {
+        req.setTag(TextUtils.isEmpty(tag) ? TAG : tag);
+        getRequestQueue().add(req);
+    }
+
+    private <T> void addToRequestQueue(Request<T> req) {
+        req.setTag(TAG);
+        getRequestQueue().add(req);
+    }
+
+    public void cancelPendingRequests(Object tag) {
+        if (mRequestQueue != null) {
+            mRequestQueue.cancelAll(tag);
         }
     }
 

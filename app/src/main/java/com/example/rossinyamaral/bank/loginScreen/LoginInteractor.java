@@ -1,6 +1,8 @@
 package com.example.rossinyamaral.bank.loginScreen;
 
 import com.example.rossinyamaral.bank.ApiCallback;
+import com.example.rossinyamaral.bank.BankCache;
+import com.example.rossinyamaral.bank.BankStorage;
 import com.example.rossinyamaral.bank.ErrorResponse;
 import com.example.rossinyamaral.bank.model.UserAccountModel;
 
@@ -39,6 +41,7 @@ public class LoginInteractor implements LoginInteractorInput {
                 new ApiCallback<UserAccountModel>() {
                     @Override
                     public void onSuccess(UserAccountModel model) {
+                        saveLastLogin(model);
                         loginResponse.userAccountModel = model;
                         output.presentLoginData(loginResponse);
                     }
@@ -49,6 +52,10 @@ public class LoginInteractor implements LoginInteractorInput {
                     }
                 });
 
+    }
+
+    private void saveLastLogin(UserAccountModel model) {
+        BankCache.setLastLogin(model.getName());
     }
 
     private boolean isLoginPasswordValid(String password) {

@@ -1,12 +1,6 @@
 package com.example.rossinyamaral.bank.loginScreen;
 
-import android.support.annotation.NonNull;
-import android.util.Log;
-
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.concurrent.TimeUnit;
 
 interface LoginPresenterInput {
     void presentLoginData(LoginResponse response);

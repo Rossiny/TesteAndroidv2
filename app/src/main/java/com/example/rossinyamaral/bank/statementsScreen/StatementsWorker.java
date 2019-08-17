@@ -1,7 +1,7 @@
 package com.example.rossinyamaral.bank.statementsScreen;
 
 import com.example.rossinyamaral.bank.ApiCallback;
-import com.example.rossinyamaral.bank.BankApplication;
+import com.example.rossinyamaral.bank.BankApi;
 import com.example.rossinyamaral.bank.ErrorResponse;
 import com.example.rossinyamaral.bank.model.StatementModel;
 
@@ -16,7 +16,7 @@ public class StatementsWorker implements StatementsWorkerInput {
 
     @Override
     public void getStatements(int userId, final ApiCallback<List<StatementModel>> callback) {
-        BankApplication.getInstance().bankServices.getStatements(userId,
+        BankApi.getStatements(userId,
                 new ApiCallback<List<StatementModel>>() {
                     @Override
                     public void onSuccess(List<StatementModel> list) {

@@ -9,7 +9,10 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.rossinyamaral.bank.BankApplication;
+import com.example.rossinyamaral.bank.BankCache;
+import com.example.rossinyamaral.bank.BaseActivity;
 import com.example.rossinyamaral.bank.R;
+import com.example.rossinyamaral.bank.ViewsUtils;
 import com.example.rossinyamaral.bank.model.UserAccountModel;
 
 import java.util.regex.Pattern;
@@ -24,7 +27,7 @@ interface LoginActivityInput {
 }
 
 
-public class LoginActivity extends AppCompatActivity implements LoginActivityInput {
+public class LoginActivity extends BaseActivity implements LoginActivityInput {
 
     public static String TAG = LoginActivity.class.getSimpleName();
     LoginInteractorInput output;
@@ -38,36 +41,48 @@ public class LoginActivity extends AppCompatActivity implements LoginActivityInp
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().hide();
-        }
-        BankApplication.getInstance().setStatusBarColor(this, android.R.color.transparent);
 
+        LoginConfigurator.INSTANCE.configure(this);
+
+        adjustBar(android.R.color.transparent);
+        bindViews();
+        setListeners();
+        fillScreenWithLastUser();
+    }
+
+    private void bindViews() {
         userEditText = findViewById(R.id.userEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
         loginButton = findViewById(R.id.loginButton);
+    }
 
-        LoginConfigurator.INSTANCE.configure(this);
+    private void setListeners() {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BankApplication.getInstance().loading(LoginActivity.this);
-                LoginRequest aLoginRequest = new LoginRequest();
-                //populate the request
-                aLoginRequest.user = userEditText.getText().toString();
-                aLoginRequest.password = passwordEditText.getText().toString();
-                output.fetchLoginData(aLoginRequest);
+                clickLogin();
             }
         });
-        String lastLogin = BankApplication.getInstance().getLastLogin();
-        String lastPassword = BankApplication.getInstance().getLastPassword();
+    }
+
+    private void clickLogin() {
+        ViewsUtils.loading(LoginActivity.this);
+        LoginRequest aLoginRequest = new LoginRequest();
+        //populate the request
+        aLoginRequest.user = userEditText.getText().toString();
+        aLoginRequest.password = passwordEditText.getText().toString();
+        output.fetchLoginData(aLoginRequest);
+    }
+
+    private void fillScreenWithLastUser() {
+        String lastLogin = BankCache.getLastLogin();
+//        String lastPassword = BankApplication.getInstance().getLastPassword();
         if (!TextUtils.isEmpty(lastLogin)) {
             userEditText.setText(lastLogin);
-            if (!TextUtils.isEmpty(lastPassword)) {
-                passwordEditText.setText(lastPassword);
-            }
+//            if (!TextUtils.isEmpty(lastPassword)) {
+//                passwordEditText.setText(lastPassword);
+//            }
         }
-        // Do other work
     }
 
 
@@ -76,13 +91,13 @@ public class LoginActivity extends AppCompatActivity implements LoginActivityInp
         Log.e(TAG, "displayLoginData() called with: viewModel = [" + viewModel + "]");
         // Deal with the data
         router.onLoginClick(viewModel);
-        BankApplication.getInstance().dismissLoading();
+        ViewsUtils.dismissLoading();
     }
 
     @Override
     public void displayLoginError(String message) {
-        BankApplication.getInstance().dismissLoading();
-        BankApplication.getInstance().alert(this, message, null);
+        ViewsUtils.dismissLoading();
+        ViewsUtils.alert(this, message, null);
     }
 
     @Override
