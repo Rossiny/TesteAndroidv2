@@ -8,7 +8,7 @@ public class BankStorageImpl implements BankStorage {
 
     private Context context;
 
-    public BankStorageImpl(Context context) {
+    BankStorageImpl(Context context) {
         this.context = context;
     }
 

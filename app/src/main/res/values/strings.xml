@@ -8,4 +8,5 @@
     <string name="logout">logout</string>
     <string name="recentes">Recentes</string>
     <string name="password_error_message">A senha deve ter pelo menos uma letra maiuscula, um caracter especial e um caracter alfanumérico.</string>
+    <string name="logo_bank">Logo Bank</string>
 </resources>

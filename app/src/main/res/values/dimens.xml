@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="marginTopLogo">64dp</dimen>
+    <dimen name="marginTopLogin">100dp</dimen>
+    <dimen name="marginTopPassword">32dp</dimen>
+    <dimen name="marginDefault">16dp</dimen>
     <dimen name="textBigSize">25sp</dimen>
     <dimen name="textItemMid">16sp</dimen>
     <dimen name="textItemSmall">12sp</dimen>

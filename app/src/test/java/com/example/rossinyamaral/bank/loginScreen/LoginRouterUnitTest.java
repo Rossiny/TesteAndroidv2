@@ -20,7 +20,7 @@ public class LoginRouterUnitTest {
     public void determineWhereToNavigate() {
         LoginActivity loginActivity = Robolectric.setupActivity(LoginActivity.class);
 
-        ComponentName component = loginActivity.router.navigateToSomeWhere().getComponent();
+        ComponentName component = loginActivity.router.navigateToStatementsScreen().getComponent();
         Assert.assertNotNull(component);
         Assert.assertEquals(StatementsActivity.class.getName(), component.getClassName());
     }
@@ -29,7 +29,7 @@ public class LoginRouterUnitTest {
     public void checkDataToNextScene() {
         LoginActivity loginActivity = Robolectric.setupActivity(LoginActivity.class);
 
-        Intent intent = loginActivity.router.navigateToSomeWhere();
+        Intent intent = loginActivity.router.navigateToStatementsScreen();
         loginActivity.router.passDataToNextScene(intent, new UserAccountModel());
         Assert.assertTrue(intent.hasExtra("userAccount"));
     }

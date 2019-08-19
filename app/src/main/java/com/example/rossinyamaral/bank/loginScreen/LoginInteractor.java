@@ -28,7 +28,7 @@ public class LoginInteractor implements LoginInteractorInput {
         this.aLoginWorkerInput = aLoginWorkerInput;
     }
 
-    public void fetchLoginData(LoginRequest request) {
+    public void fetchLoginData(final LoginRequest request) {
         if (!isLoginPasswordValid(request.password)) {
             output.presentPasswordError();
             return;
@@ -41,7 +41,7 @@ public class LoginInteractor implements LoginInteractorInput {
                 new ApiCallback<UserAccountModel>() {
                     @Override
                     public void onSuccess(UserAccountModel model) {
-                        saveLastLogin(model);
+                        saveLastLogin(request.user);
                         loginResponse.userAccountModel = model;
                         output.presentLoginData(loginResponse);
                     }
@@ -54,8 +54,8 @@ public class LoginInteractor implements LoginInteractorInput {
 
     }
 
-    private void saveLastLogin(UserAccountModel model) {
-        BankCache.setLastLogin(model.getName());
+    private void saveLastLogin(String login) {
+        BankCache.setLastLogin(login);
     }
 
     private boolean isLoginPasswordValid(String password) {

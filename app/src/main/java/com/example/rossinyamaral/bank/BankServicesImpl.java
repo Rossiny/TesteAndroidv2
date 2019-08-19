@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -35,9 +34,14 @@ import java.util.Map;
 public class BankServicesImpl implements BankServices {
 
     private static final String TAG = BankServicesImpl.class.getSimpleName();
+
+    private static final String POSTMAN_TOKEN = BuildConfig.POSTMAN_TOKEN;
+
     private static final int MY_SOCKET_TIMEOUT_MS = 10000;
+
     private static final String USER_PARAM = "user";
     private static final String PASSWORD_PARAM = "password";
+
     private Context context;
     private Gson gson;
 
@@ -51,7 +55,9 @@ public class BankServicesImpl implements BankServices {
         gson = new Gson();
     }
 
-    private void doRequest(int requestMethod, String url, final Map<String, String> map, final Response.Listener<JSONObject> listener, final Response.ErrorListener errorListener) {
+    private void doRequest(int requestMethod, String url, final Map<String, String> map,
+                           final Response.Listener<JSONObject> listener,
+                           final Response.ErrorListener errorListener) {
         Log.d(TAG, url + " " + (map != null ? map.toString() : ""));
         StringRequest request = new StringRequest(requestMethod, url,
                 new Response.Listener<String>() {
@@ -75,11 +81,11 @@ public class BankServicesImpl implements BankServices {
                 }) {
 
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 Map<String, String> params = new HashMap<>();
                 params.put("Content-Type", "application/x-www-form-urlencoded");
                 params.put("cache-control", "no-cache");
-                params.put("Postman-Token", "c935d6a8-0dfa-4363-9fff-d77647765165");
+                params.put("Postman-Token", POSTMAN_TOKEN);
                 return params;
             }
 
@@ -89,7 +95,7 @@ public class BankServicesImpl implements BankServices {
             }
 
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
                 return map;
             }
         };
@@ -104,7 +110,8 @@ public class BankServicesImpl implements BankServices {
 
 
     @Override
-    public void login(final String user, final String password, final ApiCallback<UserAccountModel> callback) {
+    public void login(final String user, final String password,
+                      final ApiCallback<UserAccountModel> callback) {
 
         try {
             Map<String, String> map = new HashMap<>();
@@ -118,15 +125,15 @@ public class BankServicesImpl implements BankServices {
                         if (callback != null) {
                             JSONObject jsonError = response.getJSONObject("error");
                             if (jsonError.length() != 0) {
-                                ErrorResponse error = gson.fromJson(jsonError.toString(), ErrorResponse.class);
+                                ErrorResponse error = gson.fromJson(
+                                        jsonError.toString(), ErrorResponse.class);
                                 callback.onError(error);
                                 return;
                             }
 
                             JSONObject jsonObject = response.getJSONObject("userAccount");
-                            UserAccountModel userAccountModel = gson.fromJson(jsonObject.toString(), UserAccountModel.class);
-                            //TODO
-                            //BankApplication.getInstance().setLastLogin(user, password);
+                            UserAccountModel userAccountModel = gson.fromJson(
+                                    jsonObject.toString(), UserAccountModel.class);
 
                             callback.onSuccess(userAccountModel);
                         }
@@ -171,14 +178,16 @@ public class BankServicesImpl implements BankServices {
                         if (callback != null) {
                             JSONObject jsonError = response.getJSONObject("error");
                             if (jsonError.length() != 0) {
-                                ErrorResponse error = gson.fromJson(jsonError.toString(), ErrorResponse.class);
+                                ErrorResponse error = gson.fromJson(
+                                        jsonError.toString(), ErrorResponse.class);
                                 callback.onError(error);
                                 return;
                             }
 
                             JSONArray jsonArray = response.getJSONArray("statementList");
                             Type listType = new TypeToken<List<StatementModel>>(){}.getType();
-                            List<StatementModel> statements = gson.fromJson(jsonArray.toString(), listType);
+                            List<StatementModel> statements = gson.fromJson(
+                                    jsonArray.toString(), listType);
 
                             callback.onSuccess(statements);
                         }

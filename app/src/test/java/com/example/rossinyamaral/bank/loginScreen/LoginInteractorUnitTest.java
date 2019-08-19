@@ -61,6 +61,11 @@ public class LoginInteractorUnitTest {
         public void presentLoginError(String message) {
             //TODO
         }
+
+        @Override
+        public void presentPasswordError() {
+            //TODO
+        }
     }
 
     private class LoginInteractorInputSpy implements LoginInteractorInput {

@@ -1,6 +1,5 @@
 package com.example.rossinyamaral.bank.loginScreen;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -8,14 +7,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.example.rossinyamaral.bank.BankApplication;
 import com.example.rossinyamaral.bank.BankCache;
 import com.example.rossinyamaral.bank.BaseActivity;
 import com.example.rossinyamaral.bank.R;
 import com.example.rossinyamaral.bank.ViewsUtils;
 import com.example.rossinyamaral.bank.model.UserAccountModel;
-
-import java.util.regex.Pattern;
 
 
 interface LoginActivityInput {
@@ -33,9 +29,9 @@ public class LoginActivity extends BaseActivity implements LoginActivityInput {
     LoginInteractorInput output;
     LoginRouter router;
 
-    EditText userEditText;
-    EditText passwordEditText;
-    Button loginButton;
+    private EditText userEditText;
+    private EditText passwordEditText;
+    private Button loginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,12 +81,16 @@ public class LoginActivity extends BaseActivity implements LoginActivityInput {
         }
     }
 
+    private void clearPasswordField() {
+        passwordEditText.setText("");
+    }
+
 
     @Override
     public void displayLoginData(UserAccountModel viewModel) {
         Log.e(TAG, "displayLoginData() called with: viewModel = [" + viewModel + "]");
-        // Deal with the data
         router.onLoginClick(viewModel);
+        clearPasswordField();
         ViewsUtils.dismissLoading();
     }
 

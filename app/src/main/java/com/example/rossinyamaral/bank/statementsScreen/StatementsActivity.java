@@ -114,8 +114,6 @@ public class StatementsActivity extends BaseActivity implements StatementsActivi
 
     @Override
     public void displayStatementsData(StatementsViewModel viewModel) {
-        Log.e(TAG, "displayStatementsData() called with: viewModel = [" + viewModel + "]");
-        // Deal with the data
         setStatementsLisView(viewModel.statements);
     }
 
