@@ -1,4 +1,4 @@
-package com.example.rossinyamaral.bank;
+package com.example.rossinyamaral.bank.local;
 
 public interface BankStorage {
 

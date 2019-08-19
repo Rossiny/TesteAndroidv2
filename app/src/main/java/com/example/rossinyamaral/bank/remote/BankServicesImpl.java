@@ -1,4 +1,4 @@
-package com.example.rossinyamaral.bank;
+package com.example.rossinyamaral.bank.remote;
 
 import android.content.Context;
 import android.net.Uri;
@@ -13,6 +13,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.rossinyamaral.bank.ApiCallback;
+import com.example.rossinyamaral.bank.BuildConfig;
 import com.example.rossinyamaral.bank.model.StatementModel;
 import com.example.rossinyamaral.bank.model.UserAccountModel;
 import com.google.gson.Gson;
@@ -50,7 +52,7 @@ public class BankServicesImpl implements BankServices {
 
     private Uri uri = Uri.parse(BuildConfig.SERVICE_BASE_URL);
 
-    BankServicesImpl(Context context) {
+    public BankServicesImpl(Context context) {
         this.context = context;
         gson = new Gson();
     }

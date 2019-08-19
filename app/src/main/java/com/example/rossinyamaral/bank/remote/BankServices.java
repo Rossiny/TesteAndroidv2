@@ -1,5 +1,6 @@
-package com.example.rossinyamaral.bank;
+package com.example.rossinyamaral.bank.remote;
 
+import com.example.rossinyamaral.bank.ApiCallback;
 import com.example.rossinyamaral.bank.model.StatementModel;
 import com.example.rossinyamaral.bank.model.UserAccountModel;
 

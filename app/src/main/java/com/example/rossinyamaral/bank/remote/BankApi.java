@@ -1,5 +1,6 @@
-package com.example.rossinyamaral.bank;
+package com.example.rossinyamaral.bank.remote;
 
+import com.example.rossinyamaral.bank.ApiCallback;
 import com.example.rossinyamaral.bank.model.StatementModel;
 import com.example.rossinyamaral.bank.model.UserAccountModel;
 
@@ -9,7 +10,7 @@ public class BankApi {
 
     private static BankServices services;
 
-    static void setService(BankServices services) {
+    public static void setService(BankServices services) {
         BankApi.services = services;
     }
 

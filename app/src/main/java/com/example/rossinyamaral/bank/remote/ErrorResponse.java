@@ -1,4 +1,4 @@
-package com.example.rossinyamaral.bank;
+package com.example.rossinyamaral.bank.remote;
 
 public class ErrorResponse {
     public int code;

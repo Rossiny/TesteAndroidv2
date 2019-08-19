@@ -13,6 +13,7 @@ public class StatementsActivityUnitTest {
     public void StatementsActivity_ShouldNOT_be_Null(){
         //Given
         StatementsActivity activity = Robolectric.setupActivity(StatementsActivity.class);
+
         //When
 
         // Then
@@ -29,7 +30,7 @@ public class StatementsActivityUnitTest {
         activity.output = statementsActivityOutputSpy;
 
         //When
-        activity.output.fetchStatementsData(null);
+        activity.fetchUsersStatements(null);
 
         //Then
         Assert.assertTrue(statementsActivityOutputSpy.fetchMetaDataIsCalled);
@@ -45,7 +46,7 @@ public class StatementsActivityUnitTest {
         //When
         StatementsRequest request = new StatementsRequest();
         request.userId = 1;
-        activity.output.fetchStatementsData(request);
+        activity.fetchUsersStatements(request);
 
         //Then
         Assert.assertNotNull(activity);
@@ -62,6 +63,24 @@ public class StatementsActivityUnitTest {
         public void fetchStatementsData(StatementsRequest request) {
             fetchMetaDataIsCalled = true;
             loginRequestCopy = request;
+        }
+
+        @Override
+        public String getFormattedAccount(String account, String agency) {
+            //TODO
+            return null;
+        }
+
+        @Override
+        public String getFormattedMoney(double value) {
+            //TODO
+            return null;
+        }
+
+        @Override
+        public String getFormattedDate(String dateString) {
+            //TODO
+            return null;
         }
     }
 }

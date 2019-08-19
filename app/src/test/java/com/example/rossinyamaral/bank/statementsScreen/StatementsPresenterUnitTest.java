@@ -20,10 +20,10 @@ public class StatementsPresenterUnitTest {
         StatementsResponse response = new StatementsResponse();
         response.statements = new ArrayList<>();
         StatementModel statementModel = new StatementModel();
-        statementModel.title = "test";
-        statementModel.desc = "test";
-        statementModel.date = "2000-01-01";
-        statementModel.value = 10;
+        statementModel.setTitle("test");
+        statementModel.setDesc("test");
+        statementModel.setDate("2000-01-01");
+        statementModel.setValue(10);
         response.statements.add(statementModel);
 
         StatementsActivityInputSpy activityInputSpy = new StatementsActivityInputSpy();
@@ -62,6 +62,11 @@ public class StatementsPresenterUnitTest {
         public void displayStatementsData(StatementsViewModel viewModel) {
             isDisplayDataCalled = true;
             viewModelCopy = viewModel;
+        }
+
+        @Override
+        public void displayError(String error) {
+            //TODO
         }
     }
 }

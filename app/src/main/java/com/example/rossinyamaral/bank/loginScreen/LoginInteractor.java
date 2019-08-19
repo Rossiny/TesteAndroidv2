@@ -1,9 +1,8 @@
 package com.example.rossinyamaral.bank.loginScreen;
 
 import com.example.rossinyamaral.bank.ApiCallback;
-import com.example.rossinyamaral.bank.BankCache;
-import com.example.rossinyamaral.bank.BankStorage;
-import com.example.rossinyamaral.bank.ErrorResponse;
+import com.example.rossinyamaral.bank.local.BankCache;
+import com.example.rossinyamaral.bank.remote.ErrorResponse;
 import com.example.rossinyamaral.bank.model.UserAccountModel;
 
 import java.util.regex.Pattern;

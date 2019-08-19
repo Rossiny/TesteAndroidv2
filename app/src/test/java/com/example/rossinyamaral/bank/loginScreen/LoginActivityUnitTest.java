@@ -13,6 +13,7 @@ public class LoginActivityUnitTest {
     public void LoginActivity_ShouldNOT_be_Null(){
         //Given
         LoginActivity activity = Robolectric.setupActivity(LoginActivity.class);
+
         //When
 
         // Then
@@ -22,34 +23,35 @@ public class LoginActivityUnitTest {
     @Test
     public void onCreate_shouldCall_fetchLoginMetaData(){
         //Given
-        LoginActivityOutputSpy LoginActivityOutputSpy = new LoginActivityOutputSpy();
-        LoginActivity LoginActivity = Robolectric.setupActivity(LoginActivity.class);
+        LoginActivityOutputSpy loginActivityOutputSpy = new LoginActivityOutputSpy();
+        LoginActivity loginActivity = Robolectric.setupActivity(LoginActivity.class);
+
         // It must have called the onCreate earlier,
         // we are injecting the mock and calling the fetchMetaData to test our condition
-        LoginActivity.output = LoginActivityOutputSpy;
+        loginActivity.output = loginActivityOutputSpy;
 
         //When
-        LoginActivity.output.fetchLoginData(null);
+        loginActivity.fetchUserData(null);
 
         //Then
-        Assert.assertTrue(LoginActivityOutputSpy.fetchLoginMetaDataIsCalled);
+        Assert.assertTrue(loginActivityOutputSpy.fetchLoginMetaDataIsCalled);
     }
 
     @Test
     public void onCreate_Calls_fetchLoginMetaData_withCorrectData(){
         //Given
         LoginActivityOutputSpy LoginActivityOutputSpy = new LoginActivityOutputSpy();
-        LoginActivity LoginActivity = Robolectric.setupActivity(LoginActivity.class);
-        LoginActivity.output = LoginActivityOutputSpy;
+        LoginActivity loginActivity = Robolectric.setupActivity(LoginActivity.class);
+        loginActivity.output = LoginActivityOutputSpy;
 
         //When
         LoginRequest request = new LoginRequest();
         request.user = "test";
         request.password = "test";
-        LoginActivity.output.fetchLoginData(request);
+        loginActivity.fetchUserData(request);
 
         //Then
-        Assert.assertNotNull(LoginActivity);
+        Assert.assertNotNull(loginActivity);
         Assert.assertEquals(LoginActivityOutputSpy.loginRequestCopy, request);
     }
 

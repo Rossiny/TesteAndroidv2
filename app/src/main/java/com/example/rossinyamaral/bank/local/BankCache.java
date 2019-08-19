@@ -1,10 +1,10 @@
-package com.example.rossinyamaral.bank;
+package com.example.rossinyamaral.bank.local;
 
 public class BankCache {
 
     private static BankStorage storage;
 
-    static void setStorage(BankStorage storage) {
+    public static void setStorage(BankStorage storage) {
         BankCache.storage = storage;
     }
 

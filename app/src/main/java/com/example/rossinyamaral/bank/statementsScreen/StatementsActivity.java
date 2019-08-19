@@ -1,7 +1,6 @@
 package com.example.rossinyamaral.bank.statementsScreen;
 
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,19 +12,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.rossinyamaral.bank.BankApplication;
 import com.example.rossinyamaral.bank.BaseActivity;
 import com.example.rossinyamaral.bank.R;
 import com.example.rossinyamaral.bank.ViewsUtils;
 import com.example.rossinyamaral.bank.model.StatementModel;
 import com.example.rossinyamaral.bank.model.UserAccountModel;
 
-import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 
 interface StatementsActivityInput {
@@ -61,19 +55,22 @@ public class StatementsActivity extends BaseActivity implements StatementsActivi
         StatementsConfigurator.INSTANCE.configure(this);
         userAccountModel = getIntent().getParcelableExtra("userAccount");
 
-        checkUserData();
-        bindViews();
-        adjustRecyclerView();
-        fillUserData();
-        setListeners();
-        fetchUsersStatements();
+        if (checkUserData()) {
+            bindViews();
+            adjustRecyclerView();
+            fillUserData();
+            setListeners();
+            fetchData();
+        }
     }
 
-    private void checkUserData() {
+    private boolean checkUserData() {
         if (userAccountModel == null) {
             Toast.makeText(this, "Ops! Ocorreu um erro...", Toast.LENGTH_LONG).show();
             finish();
+            return false;
         }
+        return true;
     }
 
     private void bindViews() {
@@ -106,10 +103,14 @@ public class StatementsActivity extends BaseActivity implements StatementsActivi
         });
     }
 
-    private void fetchUsersStatements() {
-        StatementsRequest aStatementsRequest = new StatementsRequest();
-        aStatementsRequest.userId = userAccountModel.getUserId();
-        output.fetchStatementsData(aStatementsRequest);
+    private void fetchData() {
+        StatementsRequest fetchUsersStatements = new StatementsRequest();
+        fetchUsersStatements.userId = userAccountModel.getUserId();
+        fetchUsersStatements(fetchUsersStatements);
+    }
+
+    public void fetchUsersStatements(StatementsRequest statementsRequest) {
+        output.fetchStatementsData(statementsRequest);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.example.rossinyamaral.bank;
+package com.example.rossinyamaral.bank.local;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -8,7 +8,7 @@ public class BankStorageImpl implements BankStorage {
 
     private Context context;
 
-    BankStorageImpl(Context context) {
+    public BankStorageImpl(Context context) {
         this.context = context;
     }
 

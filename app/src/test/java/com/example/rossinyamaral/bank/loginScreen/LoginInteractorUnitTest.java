@@ -18,6 +18,7 @@ public class LoginInteractorUnitTest {
         loginRequest.password = "test";
         LoginPresenterInputSpy loginPresenterInputSpy = new LoginPresenterInputSpy();
         loginInteractor.output = loginPresenterInputSpy;
+
         //When
         loginInteractor.fetchLoginData(loginRequest);
 
@@ -49,6 +50,8 @@ public class LoginInteractorUnitTest {
     private class LoginPresenterInputSpy implements LoginPresenterInput {
 
         boolean presentLoginDataIsCalled = false;
+        boolean presentLoginErrorIsCalled = false;
+        boolean presentPasswordIsCalled = false;
         LoginResponse loginResponseCopy;
 
         @Override
@@ -59,12 +62,12 @@ public class LoginInteractorUnitTest {
 
         @Override
         public void presentLoginError(String message) {
-            //TODO
+            presentLoginErrorIsCalled = true;
         }
 
         @Override
         public void presentPasswordError() {
-            //TODO
+            presentPasswordIsCalled = true;
         }
     }
 

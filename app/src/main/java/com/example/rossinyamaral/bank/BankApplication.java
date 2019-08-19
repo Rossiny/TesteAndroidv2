@@ -2,6 +2,11 @@ package com.example.rossinyamaral.bank;
 
 import android.app.Application;
 
+import com.example.rossinyamaral.bank.local.BankCache;
+import com.example.rossinyamaral.bank.local.BankStorageImpl;
+import com.example.rossinyamaral.bank.remote.BankApi;
+import com.example.rossinyamaral.bank.remote.BankServicesImpl;
+
 /**
  * Created by rossinyamaral on 08/12/18.
  */

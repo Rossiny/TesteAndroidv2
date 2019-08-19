@@ -1,9 +1,7 @@
 package com.example.rossinyamaral.bank.statementsScreen;
 
 import com.example.rossinyamaral.bank.ApiCallback;
-import com.example.rossinyamaral.bank.BankApplication;
-import com.example.rossinyamaral.bank.BankServicesImpl;
-import com.example.rossinyamaral.bank.ErrorResponse;
+import com.example.rossinyamaral.bank.remote.ErrorResponse;
 import com.example.rossinyamaral.bank.model.StatementModel;
 
 import java.text.NumberFormat;

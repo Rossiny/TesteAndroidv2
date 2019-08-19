@@ -54,6 +54,11 @@ public class StatementsInteractorUnitTest {
             presentDataIsCalled = true;
             statementsResponseCopy = response;
         }
+
+        @Override
+        public void presentError(String error) {
+            //TODO
+        }
     }
 
     private class StatementsInteractorInputSpy implements StatementsInteractorInput {
@@ -66,6 +71,24 @@ public class StatementsInteractorUnitTest {
         public void fetchStatementsData(StatementsRequest request) {
             interactorDataIsCalled = true;
             requestCopy = request;
+        }
+
+        @Override
+        public String getFormattedAccount(String account, String agency) {
+            //TODO
+            return null;
+        }
+
+        @Override
+        public String getFormattedMoney(double value) {
+            //TODO
+            return null;
+        }
+
+        @Override
+        public String getFormattedDate(String dateString) {
+            //TODO
+            return null;
         }
     }
 }

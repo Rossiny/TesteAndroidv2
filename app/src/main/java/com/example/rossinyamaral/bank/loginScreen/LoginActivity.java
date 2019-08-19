@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.example.rossinyamaral.bank.BankCache;
+import com.example.rossinyamaral.bank.local.BankCache;
 import com.example.rossinyamaral.bank.BaseActivity;
 import com.example.rossinyamaral.bank.R;
 import com.example.rossinyamaral.bank.ViewsUtils;
@@ -56,28 +56,23 @@ public class LoginActivity extends BaseActivity implements LoginActivityInput {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clickLogin();
+                LoginRequest loginRequest = new LoginRequest();
+                loginRequest.user = userEditText.getText().toString();
+                loginRequest.password = passwordEditText.getText().toString();
+                fetchUserData(loginRequest);
             }
         });
     }
 
-    private void clickLogin() {
+    public void fetchUserData(LoginRequest loginRequest) {
         ViewsUtils.loading(LoginActivity.this);
-        LoginRequest aLoginRequest = new LoginRequest();
-        //populate the request
-        aLoginRequest.user = userEditText.getText().toString();
-        aLoginRequest.password = passwordEditText.getText().toString();
-        output.fetchLoginData(aLoginRequest);
+        output.fetchLoginData(loginRequest);
     }
 
     private void fillScreenWithLastUser() {
         String lastLogin = BankCache.getLastLogin();
-//        String lastPassword = BankApplication.getInstance().getLastPassword();
         if (!TextUtils.isEmpty(lastLogin)) {
             userEditText.setText(lastLogin);
-//            if (!TextUtils.isEmpty(lastPassword)) {
-//                passwordEditText.setText(lastPassword);
-//            }
         }
     }
 
